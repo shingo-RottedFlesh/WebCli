@@ -2,10 +2,7 @@ module firstApp
 
 go 1.25.2
 
-require (
-	github.com/labstack/echo v3.3.10+incompatible
-	github.com/labstack/echo/v4 v4.13.4
-)
+require github.com/labstack/echo/v4 v4.13.4
 
 require (
 	github.com/labstack/gommon v0.4.2 // indirect
@@ -17,4 +14,5 @@ require (
 	golang.org/x/net v0.40.0 // indirect
 	golang.org/x/sys v0.33.0 // indirect
 	golang.org/x/text v0.25.0 // indirect
+	golang.org/x/time v0.11.0 // indirect
 )
