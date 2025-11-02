@@ -12,21 +12,6 @@ type result struct {
 }
 
 func main() {
-	// e := echo.New()
-	// e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-	// 	// Reactアプリケーションのオリジンを指定します。
-	// 	// "*" を使用すると、任意のオリジンからのリクエストが許可されますが、本番環境では非推奨です。
-	// 	AllowOrigins: []string{"*",},
-	// 	AllowMethods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete},
-	// 	AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
-	// }))
-
-	// e.GET("/", func(c echo.Context) error {
-	// 	return c.String(http.StatusOK,
-	// 	json.NewEncoder(w).Encode(Message{Text: "testだよ"})
-	// 	)
-	// })
-	// e.Logger.Fatal(e.Start(":8080"))
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
