@@ -26,7 +26,7 @@
     FROM scratch
 
     WORKDIR /app
-    
+
     # ビルドステージ(builder)から、コンパイル済みのバイナリ(/app/server)のみをコピー
     COPY --from=builder /app/server /usr/local/bin/server
 

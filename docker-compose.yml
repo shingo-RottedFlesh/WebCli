@@ -11,3 +11,12 @@ services:
     volumes:
       - ./go:/app
     tty: true
+  react:
+    build:
+      context: ./react
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - ./go:/app
+    tty: true
