@@ -2,10 +2,35 @@
 
 
 services:
+
+  db:
+    image: postgres:16-alpine # 軽量なPostgreSQLイメージ
+    container_name: postgres_db
+    restart: always
+    environment:
+      # ⚠️ 必須：アクセスに必要な環境変数を設定
+      POSTGRES_USER: postgres # データベースユーザー名
+      POSTGRES_PASSWORD: postgres # データベースパスワード
+      POSTGRES_DB: appdb # データベース名（接続時に使用）
+    volumes:
+      # データの永続化設定: ホスト側の 'pgdata' ディレクトリにデータを保存
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      # 外部からアクセスする場合にポートを公開 (Go/Reactからはサービス名でアクセスするため不要な場合もある)
+      - "5432:5432"
+
   go:
     build:
       context: ./go
       dockerfile: Dockerfile
+    container_name: go-api
+    environment:
+      # 💡 GoコードがDB接続に使用する情報
+      DB_HOST: db        # DBサービスのコンテナ名
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_NAME: appdb
     ports:
       - "8080:8080"
     volumes:
@@ -18,5 +43,11 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./go:/app
+      - ./react:/app
     tty: true
+
+
+volumes:
+  pgdata:
+    # DBの内容がコンテナに依存しないようにローカルPCに作成する
+    driver: local
