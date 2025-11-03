@@ -1,0 +1,5 @@
+services:
+  go:
+    # デバッグ用
+    # image: go-api # イメージ名を指定
+    # command: ["sleep", "infinity"]  # <-- これを追加/修正

@@ -14,10 +14,16 @@
     # アプリケーションのソースコードをすべてコピー
     COPY ./firstApp/ .
 
-
     # GOOS=linux: ビルド環境がWindows/Macでも、Linux用の実行ファイルを生成
     # -o /app/server: /app/server という名前で実行ファイルを出力
-    RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o /app/server ./
+    # RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o /app/server ./
+    RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o /app/server ./
+
+    # ★ デバッグ用: ここでビルドステージの結果を一時的に保持する新しいステージを作成 ★
+    # FROM builder AS debug-stage
+
+    # # デバッグ用のCMDを追加し、コンテナを永遠に起動したままにする
+    # CMD ["sleep", "infinity"]
 
 
 # ========================
@@ -35,6 +41,10 @@
 
     # コンテナがリッスンするポートを公開
     EXPOSE 8080
+
+    # 実行権限を付与
+    # RUN chmod +x /app/server 
+
 
     # コンテナ起動時に実行するコマンド
     CMD ["/app/server"]

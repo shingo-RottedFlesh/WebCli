@@ -1,4 +1,4 @@
-module firstApp
+module main
 
 go 1.25.2
 
