@@ -1,0 +1,15 @@
+# 開発時のホットリロード用
+
+
+root = "."
+tmp_dir = "tmp" # 一時的なビルドファイルを格納するディレクトリ
+
+[build]
+cmd = "go install -o ./tmp/main ./firstApp/" # 実行コマンドを 'go build' から 'go install' に変更
+bin = "./tmp/main" # ビルドされたバイナリのパス
+include_ext = ["go", "tpl", "html", "yaml", "toml"] # 監視対象のファイル拡張子
+exclude_dir = ["tmp", "vendor", "node_modules"] # 監視対象から除外するディレクトリ
+
+[run]
+# コンパイルが成功したら、このコマンドを実行する
+cmd = "./tmp/main"

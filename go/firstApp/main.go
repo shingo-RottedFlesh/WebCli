@@ -19,7 +19,7 @@ func main() {
 		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(result{Text: "testだぜ"})
+		json.NewEncoder(w).Encode(result{Text: "testだぜ！！！"})
 	})
 	log.Println("Go API running on :8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))

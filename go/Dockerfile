@@ -4,12 +4,16 @@
     # Go公式のイメージ
     FROM golang:1.25-alpine AS builder
 
+    # RUN go install github.com/air-verse/air@latest
+    
     # 作業Dir作成
     WORKDIR /app
 
     # 依存関係のキャッシュを活用するため、go.mod と go.sum を先にコピー
     COPY go.mod go.sum ./
     RUN go mod download
+
+    
 
     # アプリケーションのソースコードをすべてコピー
     COPY ./firstApp/ .
@@ -19,6 +23,8 @@
     # RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o /app/server ./
     RUN GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o /app/server ./
 
+    # COPY ./tmp/ .
+    # CMD ["air", "-c", ".air.toml"]
 
 # ========================
 # 実行環境
