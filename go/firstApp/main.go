@@ -1,6 +1,8 @@
 package main
 
 import (
+	"firstApp/dbdriver"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -20,7 +22,13 @@ func main() {
 
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(result{Text: "testだぜ！！！"})
+
+		user, err := dbdriver.Select()
+
+		fmt.Printf("user：%v\n", user)
+		fmt.Printf("err：%v\n", err)
 	})
 	log.Println("Go API running on :8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
+
 }

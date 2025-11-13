@@ -15,6 +15,9 @@ services:
     volumes:
       # データの永続化設定: ホスト側の 'pgdata' ディレクトリにデータを保存
       - pgdata:/var/lib/postgresql/data
+      # DB立ち上げ時に流すSQL
+      # - ./database/create_users.sql: /docker-entrypoint-initdb.d/01-init.sql
+      # - ./database/create_files.sql: /docker-entrypoint-initdb.d/02-init.sql
     ports:
       # 外部からアクセスする場合にポートを公開 (Go/Reactからはサービス名でアクセスするため不要な場合もある)
       - "5432:5432"

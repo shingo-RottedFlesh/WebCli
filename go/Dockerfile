@@ -5,6 +5,7 @@
     FROM golang:1.25-alpine AS builder
 
     # RUN go install github.com/air-verse/air@latest
+    # RUN go install github.com/jackc/pgx/v5/stdlib@latest
     
     # 作業Dir作成
     WORKDIR /app
