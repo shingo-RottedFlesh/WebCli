@@ -21,8 +21,6 @@ const LoginForm = () => {
         } else {
             if (validationRef.current) {
                 validationRef.current.innerText = 'ログインに失敗しました';
-            } else {
-                alert("alidationRef.currentがnullです");
             }
         }
     }
