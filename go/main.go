@@ -14,6 +14,13 @@ type result struct {
 }
 
 func main() {
+	// 起動時に1度だけDB接続を初期化
+	db, err := dbdriver.NewConnectDB()
+	if err != nil {
+		log.Fatalf("FATAL: Failed to initialize database: %v", err)
+	}
+	// 2. アプリケーション終了時に**一度だけ**Closeを呼ぶ
+	defer db.Close()
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "http://localhost")
@@ -23,7 +30,18 @@ func main() {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(result{Text: "testだぜ！！！"})
 
-		user, err := dbdriver.SelectUsersWhereUsernamePassword("shingo", "password")
+		userRepo := dbdriver.NewUserRepository(db)
+		user, err := userRepo.ValidatePassword("shingo", "shingo")
+
+		// hash, err := bcrypt.GenerateFromPassword([]byte("shingo"), bcrypt.DefaultCost)
+		if err != nil && !user {
+			fmt.Printf("認証失敗\n")
+		} else {
+			fmt.Printf("成功\n")
+		}
+
+		// insUser := dbdriver.NewUser("shingo", "shingo")
+		// err = userRepo.InsertUser(*insUser)
 
 		fmt.Printf("user：%v\n", user)
 		fmt.Printf("err：%v\n", err)

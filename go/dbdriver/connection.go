@@ -3,6 +3,7 @@ package dbdriver
 import (
 	// ドライバを登録するために「_」（ブランクインポート）でインポート
 	"database/sql"
+	"os"
 	"time"
 
 	_ "github.com/jackc/pgx/v5/stdlib"
@@ -11,8 +12,12 @@ import (
 // コンストラクタ
 func NewConnectDB() (*sql.DB, error) {
 	// DB接続情報
-	dbURL := "postgres://postgres:postgres@db:5432/appdb?sslmode=disable"
-	// dbURL := "host=db user=postgres password=postgres dbname=appdb sslmode=disable"
+	dbURL := os.Getenv("DATABASE_URL")
+	// 環境変数で取得できない場合は開発環境用
+	if dbURL == "" {
+		dbURL = "postgres://postgres:postgres@db:5432/appdb?sslmode=disable"
+		// dbURL := "host=db user=postgres password=postgres dbname=appdb sslmode=disable"
+	}
 
 	//
 	db, err := sql.Open("pgx", dbURL)

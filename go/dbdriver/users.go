@@ -1,8 +1,11 @@
 package dbdriver
 
 import (
+	"database/sql"
 	"fmt"
 	"time"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
@@ -14,30 +17,35 @@ type User struct {
 	UpdatedAt time.Time `db:"updated_at"`
 }
 
+// 内部にDBの接続プールを保持
+type UserRepository struct {
+	db *sql.DB
+}
+
+// NewUserRepositoryは、UserRepositoryのインスタンスを生成する
+// 依存性として、初期化済みの*sql.DBを受け取る
+func NewUserRepository(db *sql.DB) *UserRepository {
+	return &UserRepository{db: db}
+}
+
 // コンストラクタ
-func NewUser(userId int64, userName string, password string, deleted bool) *User {
+func NewUser(userName string, password string) *User {
 	return &User{
-		UserID:   userId,
 		UserName: userName,
 		Password: password,
-		Deleted:  deleted,
 	}
 }
 
 // 全ユーザ取得
-func SelectUsers() ([]User, error) {
+func (ur *UserRepository) SelectUsers() ([]User, error) {
 	var users []User
-	db, err := NewConnectDB()
-	if err != nil {
-		return nil, fmt.Errorf("エラー：接続エラー（%v）", err)
-	}
-	// 最後に接続を閉じる
-	defer db.Close()
 
-	rows, err := db.Query("select user_id, user_name, password, deleted, created_at, updated_at from users")
+	rows, err := ur.db.Query("select user_id, user_name, password, deleted, created_at, updated_at from users")
 	if err != nil {
-		return nil, fmt.Errorf(err.Error())
+		return nil, fmt.Errorf("failed to query users: %w", err)
 	}
+	defer rows.Close()
+
 	for rows.Next() {
 		var user User
 		if err := rows.Scan(&user.UserID, &user.UserName, &user.Password, &user.Deleted, &user.CreatedAt, &user.UpdatedAt); err != nil {
@@ -50,26 +58,43 @@ func SelectUsers() ([]User, error) {
 }
 
 // ユーザ名・パスワード指定でユーザ取得
-func SelectUsersWhereUsernamePassword(user_name string, password string) ([]User, error) {
-	var users []User
-	db, err := NewConnectDB()
-	if err != nil {
-		return nil, fmt.Errorf("エラー：接続エラー（%v）", err)
-	}
-	// 最後に接続を閉じる
-	defer db.Close()
+func (ur *UserRepository) ValidatePassword(userName string, plainTextPassword string) (bool, error) {
+	var storedHash string
 
-	rows, err := db.Query("select user_id, user_name, password, deleted, created_at, updated_at from users where user_name = $1 and password = $2 and deleted = 0", user_name, password)
+	err := ur.db.QueryRow(`SELECT password FROM users where user_name = $1 and deleted = false`, userName).Scan(&storedHash)
 	if err != nil {
-		return nil, fmt.Errorf(err.Error())
-	}
-	for rows.Next() {
-		var user User
-		if err := rows.Scan(&user.UserID, &user.UserName, &user.Password, &user.Deleted, &user.CreatedAt, &user.UpdatedAt); err != nil {
-			return nil, fmt.Errorf("エラー：Cast users")
+		if err == sql.ErrNoRows {
+			// ユーザーが存在しない場合、認証失敗 (エラーではない)
+			return false, nil
 		}
-		users = append(users, user)
+		return false, fmt.Errorf("failed to query users: %w", err)
 	}
 
-	return users, nil
+	// bcryptでハッシュと平文を比較する
+	err = bcrypt.CompareHashAndPassword([]byte(storedHash), []byte(plainTextPassword))
+	if err != nil {
+		if err == bcrypt.ErrMismatchedHashAndPassword {
+			// パスワード不一致 (エラーではない)
+			return false, nil
+		}
+		// それ以外のエラー (ハッシュ形式が不正など)
+		return false, fmt.Errorf("password comparison error: %w", err)
+	}
+
+	return true, nil
+}
+
+// ユーザ名・パスワード指定でユーザ取得
+func (ur *UserRepository) InsertUser(userName string, plainTextPassword string) error {
+	passwordHash, err := bcrypt.GenerateFromPassword([]byte(plainTextPassword), bcrypt.DefaultCost)
+	if err != nil {
+		return fmt.Errorf("failed to hash password: %w", err)
+	}
+
+	_, err = ur.db.Exec(`INSERT INTO users (user_name, password) VALUES ($1, $2)`, userName, passwordHash)
+	if err != nil {
+		return fmt.Errorf("failed to insert user: %w", err)
+	}
+
+	return nil
 }
