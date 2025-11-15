@@ -17,7 +17,7 @@
     
 
     # アプリケーションのソースコードをすべてコピー
-    COPY ./firstApp/ .
+    COPY ./ ./
 
     # GOOS=linux: ビルド環境がWindows/Macでも、Linux用の実行ファイルを生成
     # -o /app/server: /app/server という名前で実行ファイルを出力

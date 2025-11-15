@@ -1,7 +1,7 @@
 package main
 
 import (
-	"firstApp/dbdriver"
+	"app/dbdriver"
 	"fmt"
 	"log"
 	"net/http"
@@ -23,7 +23,7 @@ func main() {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(result{Text: "testだぜ！！！"})
 
-		user, err := dbdriver.Select()
+		user, err := dbdriver.SelectUsersWhereUsernamePassword("shingo", "password")
 
 		fmt.Printf("user：%v\n", user)
 		fmt.Printf("err：%v\n", err)

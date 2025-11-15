@@ -1,6 +1,6 @@
-module firstApp
+module app
 
-go 1.25.0
+go 1.25.2
 
 require github.com/jackc/pgx/v5 v5.7.6
 
