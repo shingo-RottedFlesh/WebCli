@@ -5,7 +5,7 @@ const LoginForm = () => {
     // ログインの入力項目の変数設定
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [data, setData] = useState('');
+
     const [error, setError] = useState('');
 
     // バリデーション部分の要素操作用
