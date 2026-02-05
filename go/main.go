@@ -18,6 +18,11 @@ type user struct {
 	Password string `json:"password"`
 }
 
+type file struct {
+	FileId   string `json:"file_id"`
+	FileName string `json:"file_name"`
+}
+
 func main() {
 	// 起動時に1度だけDB接続を初期化
 	db, err := dbdriver.NewConnectDB()
@@ -39,6 +44,26 @@ func main() {
 
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(result{Text: "testだぜ！！！"})
+	})
+
+	http.HandleFunc("/clip/list", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "http://localhost")
+		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		files := []*file{
+			&file{FileId: "1", FileName: "test1"},
+			&file{FileId: "2", FileName: "test2"},
+			&file{FileId: "3", FileName: "test3"},
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(files)
 	})
 
 	http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
@@ -91,7 +116,7 @@ func main() {
 			// ここでは要件に合わせてステータスコードを使い分けるか、
 			// シンプルに200で統一してJSONで判断させるか。
 			// フロントエンドの変更に合わせて200 OKで返却し、JSONの中身で判定させる実装にします。
-			w.WriteHeader(http.StatusOK) 
+			w.WriteHeader(http.StatusOK)
 		} else {
 			// 認証成功
 			fmt.Printf("成功\n")
