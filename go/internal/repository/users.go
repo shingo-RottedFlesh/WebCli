@@ -1,4 +1,4 @@
-package dbdriver
+package repository
 
 import (
 	"database/sql"

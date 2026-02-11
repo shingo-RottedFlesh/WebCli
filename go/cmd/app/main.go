@@ -112,7 +112,7 @@ func main() {
 
 }
 
-// ルーティングの初期共通処理
+// ルーティング事前共通処理
 func commonMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "http://localhost")

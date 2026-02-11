@@ -1,10 +1,9 @@
-package dbdriver
+package repository
 
 import (
 	"database/sql"
 	"fmt"
 	"time"
-	// "golang.org/x/crypto/bcrypt"
 )
 
 type File struct {

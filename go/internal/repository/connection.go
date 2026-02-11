@@ -1,4 +1,4 @@
-package dbdriver
+package repository
 
 import (
 	// ドライバを登録するために「_」（ブランクインポート）でインポート
