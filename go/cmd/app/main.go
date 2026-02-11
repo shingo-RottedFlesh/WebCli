@@ -1,7 +1,7 @@
 package main
 
 import (
-	"app/dbdriver"
+	repository "app/internal/repository"
 	"fmt"
 	"log"
 	"net/http"
@@ -30,7 +30,7 @@ type ResponseWriter struct {
 
 func main() {
 	// 起動時に1度だけDB接続を初期化
-	db, err := dbdriver.NewConnectDB()
+	db, err := repository.NewConnectDB()
 	if err != nil {
 		log.Fatalf("FATAL: Failed to initialize database: %v", err)
 	}
@@ -76,8 +76,6 @@ func main() {
 			return
 		}
 
-		w.Header().Set("Content-Type", "application/json")
-
 		// レスポンス用の構造体
 		type LoginResponse struct {
 			Success bool   `json:"success"`
@@ -93,7 +91,7 @@ func main() {
 		fmt.Printf("username：%v\n", u.UserName)
 		fmt.Printf("password：%v\n", u.Password)
 
-		userRepo := dbdriver.NewUserRepository(db)
+		userRepo := repository.NewUserRepository(db)
 		isValid, err := userRepo.ValidatePassword(u.UserName, u.Password)
 
 		var resp LoginResponse

@@ -22,7 +22,7 @@
     # GOOS=linux: ビルド環境がWindows/Macでも、Linux用の実行ファイルを生成
     # -o /app/server: /app/server という名前で実行ファイルを出力
     # RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o /app/server ./
-    RUN GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o /app/server ./
+    RUN GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o /app/server ./cmd/app
 
     # COPY ./tmp/ .
     # CMD ["air", "-c", ".air.toml"]
