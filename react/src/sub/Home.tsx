@@ -1,7 +1,5 @@
 import { useState } from 'react'
-import {Link} from 'react-router-dom'
-import reactLogo from '../assets/react.svg'
-import viteLogo from '/vite.svg'
+import { Link } from 'react-router-dom'
 import '../App.css'
 
 function Home() {
@@ -10,17 +8,9 @@ function Home() {
   return (
     <>
       <div>
-        <Link to="/home">Home</Link><br/>
-        <Link to="/page1">Page1</Link><br/>
-        <Link to="/page2">Page2</Link><br/>
-      </div>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <Link to="/home">Home</Link><br />
+        <Link to="/page1">Page1</Link><br />
+        <Link to="/page2">Page2</Link><br />
       </div>
       <h1>Vite + React</h1>
       <div className="card">
@@ -35,7 +25,8 @@ function Home() {
         Click on the Vite and React logos to learn more
       </p>
 
-      </>
-  )}
+    </>
+  )
+}
 
-  export default Home
+export default Home

@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react"
 import { useNavigate } from 'react-router-dom';
 
-const LoginForm = () => {
+const Login = () => {
     // ログインの入力項目の変数設定
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -75,4 +75,4 @@ const LoginForm = () => {
 }
 
 
-export default LoginForm
+export default Login

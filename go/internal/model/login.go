@@ -27,10 +27,6 @@ func Login(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-
-	fmt.Printf("username：%v\n", u.Username)
-	fmt.Printf("password：%v\n", u.Password)
-
 	userRepo := repository.NewUserRepository(db)
 	isValid, err := userRepo.ValidatePassword(u.Username, u.Password)
 
