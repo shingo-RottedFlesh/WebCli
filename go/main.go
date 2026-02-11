@@ -23,6 +23,11 @@ type file struct {
 	FileName string `json:"file_name"`
 }
 
+// 内部にレスポンスライターを保持
+type ResponseWriter struct {
+	w http.ResponseWriter
+}
+
 func main() {
 	// 起動時に1度だけDB接続を初期化
 	db, err := dbdriver.NewConnectDB()
@@ -33,23 +38,20 @@ func main() {
 	defer db.Close()
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost")
-		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+		res := ResponseWriter{w: w}
+		res.setCommonHeaders()
 
 		if r.Method == "OPTIONS" {
-			w.WriteHeader(http.StatusOK)
+			res.w.WriteHeader(http.StatusOK)
 			return
 		}
 
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(result{Text: "testだぜ！！！"})
+		json.NewEncoder(res.w).Encode(result{Text: "testだぜ！！！"})
 	})
 
 	http.HandleFunc("/clip/list", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost")
-		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+		res := ResponseWriter{w: w}
+		res.setCommonHeaders()
 
 		if r.Method == "OPTIONS" {
 			w.WriteHeader(http.StatusOK)
@@ -62,14 +64,12 @@ func main() {
 			&file{FileId: "3", FileName: "test3"},
 		}
 
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(files)
+		json.NewEncoder(res.w).Encode(files)
 	})
 
 	http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost")
-		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+		res := ResponseWriter{w: w}
+		res.setCommonHeaders()
 
 		if r.Method == "OPTIONS" {
 			w.WriteHeader(http.StatusOK)
@@ -136,4 +136,12 @@ func main() {
 	log.Println("Go API running on :8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 
+}
+
+// ルーティングの初期共通処理
+func (res *ResponseWriter) setCommonHeaders() {
+	res.w.Header().Set("Access-Control-Allow-Origin", "http://localhost")
+	res.w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	res.w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	res.w.Header().Set("Content-Type", "application/json")
 }
