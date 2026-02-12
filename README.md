@@ -1,6 +1,34 @@
 # WebCli
 PC間のテキスト共有などのシステムを作る想定
 
+# フォルダ構成
+```
+WebCli/
+├── go/                    # Goのソースコード
+│   ├── cmd/
+│   │   └── app/
+│   │       └── main.go    # アプリケーションのエントリーポイント
+│   ├── internal/
+│   │   ├── model/         # ビジネスロジック（認証、DB操作など）
+│   │   └── repository/    # データアクセス層（DB接続、クエリ）
+│   ├── go.mod
+│   └── go.sum
+│
+├── react/                 # Reactのソースコード
+│   ├── src/
+│   │   ├── features/      # 機能別コンポーネント（loginなど）
+│   │   ├── sub/           # サブページ（Home, Page1, Page2）
+│   │   ├── App.tsx        # メインコンポーネント
+│   │   └── main.tsx       # Reactアプリケーションのエントリーポイント
+│   ├── package.json
+│   └── vite.config.ts
+│
+├── .gitignore
+├── README.md
+└── docker-compose.yml     # Docker設定ファイル
+```
+
+
 
 # 構成イメージ
 Geminiに聞いてだしたまんま
