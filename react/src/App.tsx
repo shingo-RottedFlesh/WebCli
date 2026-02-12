@@ -4,6 +4,7 @@ import Page1 from './sub/Page1.tsx'
 import Page2 from './sub/Page2.tsx'
 import Home from './sub/Home.tsx'
 import Login from './features/login.tsx'
+import ClipList from './features/ClipList.tsx'
 import React from 'react';
 
 const App: React.FC = () => {
@@ -14,6 +15,7 @@ const App: React.FC = () => {
         <Route path="/home" element={<Home />} />
         <Route path="/page1" element={<Page1 />} />
         <Route path="/page2" element={<Page2 />} />
+        <Route path="/clip/list" element={<ClipList />} />
       </Routes>
     </div>
   );
