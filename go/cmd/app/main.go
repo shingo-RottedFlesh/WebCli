@@ -18,9 +18,9 @@ type user struct {
 	Password string `json:"password"`
 }
 
-type file struct {
-	FileId   string `json:"fileId"`
-	FileName string `json:"fileName"`
+type clip struct {
+	ClipId   string `json:"clipId"`
+	ClipName string `json:"clipName"`
 }
 
 func main() {
@@ -41,13 +41,13 @@ func main() {
 
 	mux.HandleFunc("/clip/list", func(w http.ResponseWriter, r *http.Request) {
 
-		files := []file{
-			file{FileId: "1", FileName: "test1"},
-			file{FileId: "2", FileName: "test2"},
-			file{FileId: "3", FileName: "test3"},
+		clips := []clip{
+			{ClipId: "1", ClipName: "test1"},
+			{ClipId: "2", ClipName: "test2"},
+			{ClipId: "3", ClipName: "test3"},
 		}
 
-		json.NewEncoder(w).Encode(files)
+		json.NewEncoder(w).Encode(clips)
 	})
 
 	mux.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {

@@ -3,16 +3,16 @@ import { Link } from 'react-router-dom'
 import '../App.css'
 
 // jsonの受け取り型を定義
-interface FileList {
-    fileId: string;
-    fileName: string;
+interface ClipList {
+    clipId: string;
+    clipName: string;
 }
 
 // 初期値設定
-const initialFileList: FileList[] = [];
+const initialClipList: ClipList[] = [];
 
 function Home() {
-    const [fileList, setFileList] = useState<FileList[]>(initialFileList);
+    const [clipList, setClipList] = useState<ClipList[]>(initialClipList);
     useEffect(() => {
         fetch('http://localhost:8080/clip/list', {
             method: 'GET',
@@ -21,7 +21,7 @@ function Home() {
             },
         })
             .then(response => response.json())
-            .then(data => setFileList(data))
+            .then(data => setClipList(data))
             .catch(error =>
                 console.error('リクエストエラー:', error));
     }, []);
@@ -32,12 +32,12 @@ function Home() {
             <div>
                 <Link to="/home">Home</Link><br />
             </div>
-            <h1>ファイル一覧</h1>
+            <h1>クリップ一覧</h1>
             <div>
-                {fileList.map((file) => (
-                    <div key={file.fileId}>
-                        <p>ファイルID: {file.fileId}</p>
-                        <p>ファイル名: {file.fileName}</p>
+                {clipList.map((clip) => (
+                    <div key={clip.clipId}>
+                        <p>クリップID: {clip.clipId}</p>
+                        <p>クリップ名: {clip.clipName}</p>
                     </div>
                 ))}
             </div>
