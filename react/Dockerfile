@@ -32,6 +32,15 @@ COPY --from=builder /app/dist /usr/local/apache2/htdocs/
 # (オプション) ReactのSPAに対応するためのカスタム設定ファイルをコピーする場合
 # 例: COPY ./apache/httpd.conf /usr/local/apache2/conf/httpd.conf
 
+# .htaccessを有効にするためにhttpd.confを修正
+RUN sed -i \
+    -e 's/^#\(LoadModule rewrite_module modules\/mod_rewrite.so\)/\1/' \
+    -e 's/AllowOverride None/AllowOverride All/g' \
+    /usr/local/apache2/conf/httpd.conf
+
+# .htaccessをコピー
+COPY .htaccess /usr/local/apache2/htdocs/
+
 # コンテナがリッスンするポートを公開 (Apacheのデフォルトポート)
 EXPOSE 80
 

@@ -41,6 +41,7 @@ const Login = () => {
                 console.log('Response data:', data);
                 if (data.success) {
                     // ログイン成功
+                    localStorage.setItem('isAuthenticated', 'true');
                     navigate('/home');
                 } else {
                     // ログイン失敗（バリデーションエラーやシステムエラー）
