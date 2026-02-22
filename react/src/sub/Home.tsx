@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import Header from '../components/Header.tsx'
 import '../App.css'
 
 function Home() {
@@ -7,12 +7,7 @@ function Home() {
 
   return (
     <>
-      <div>
-        <Link to="/home">Home</Link><br />
-        <Link to="/page1">Page1</Link><br />
-        <Link to="/page2">Page2</Link><br />
-        <Link to="/clip/list">ClipList</Link><br />
-      </div>
+      <Header />
       <h1>Vite + React</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
